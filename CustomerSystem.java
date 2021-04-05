@@ -70,7 +70,33 @@ class CustomerSystem{
     * This method may also be broken down further depending on your algorithm
     */
     public static void validateCreditCard(){
+        (String word)
     }
+    int[] nums = new int[word.length()];
+    for (int i = 0; i < word.length(); i++) {
+        nums[i] = Integer.parseInt(word.substring(i, i + 1));
+    }
+    for (int i = nums.length - 2; i >= 0; i = i - 2) {
+        int j = nums[i];
+        j = j * 2;
+        if (j > 9) {
+            j = j % 10 + 1;
+        }
+        nums[i] = j;
+    }
+    int sum =0;
+    for (int i =0; i < nums.length;i++) {
+        sum += nums[i];
+    }
+    if (sum%10==0) {
+        System.out.println(word + " is a valid credit card number");
+    } else {
+        System.out.println(word + " is an invalid credit card number");
+    }
+}
+ }
+ 
+    
     /*
     * This method may be edited to achieve the task however you like.
     * The method may not nesessarily be a void return type
