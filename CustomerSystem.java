@@ -56,7 +56,32 @@ class CustomerSystem{
     * This method may also be broken down further depending on your algorithm
     */
     public static void enterCustomerInfo() {
-    }
+    Scanner reader = new Scanner(System.in);
+    System.out.println("----------EnterCustomerInfo----------");
+    System.out.println();
+    System.out.println("-----What is your FIRST name?-----");
+    String fn = reader.nextLine();
+    System.out.println();
+    System.out.println("-----What is your LAST name?-----");
+    String ln = reader.nextLine();
+    System.out.println();
+    System.out.println("-----What CITY do you reside in?-----");
+    String city = reader.nextLine();
+    System.out.println();
+    System.out.println("-----What is your POSTAL CODE?-----");
+    String pc = reader.nextLine();
+    System.out.println();
+    System.out.println("-----Finally, what is your CREDIT CARD NUMBER?-----");
+    String CCnum = reader.nextLine();
+
+    boolean validateCreditCard = validateCreditCard(CCnum);                          //I AM STUCK ON HOW TO IMPLEMENT A WHILE LOOP TO ALLOW THEM TO RE-ENTER AN INVALID INPUT AT A CREDIT CARD NUMBER
+  if(validateCreditCard == true){
+    System.out.println("Valid credit card number");
+ }
+  else{
+    System.out.println("Invalid credit card number");
+  }
+}
     /*
     * This method may be edited to achieve the task however you like.
     * The method may not nesessarily be a void return type
@@ -68,31 +93,23 @@ class CustomerSystem{
     * This method may be edited to achieve the task however you like.
     * The method may not nesessarily be a void return type
     * This method may also be broken down further depending on your algorithm
-    */
-    boolean validateCreditCard = verifyCC(CCnum);
-  if(validateCreditCard == true){
-    System.out.println("Valid credit card number");
- }
-  else{
-    System.out.println("Invalid credit card number");
-  }
- }
+    */                    
   
- public static boolean verifyCC(String creditC){
+ public static boolean validateCreditCard(String creditC){                            //Is this ok? did i mess up the method? PLEASE CHECK IF POSSIBLE. (I did caps to grab attention, no anger!)
     int[] num = new int[creditC.length()];
-        creditC = creditC.replaceAll("\\s+","");
+        creditC = creditC.replaceAll("\\s+",""); //Removes any spaces that the user may have inputted
  System.out.println(creditC);
-   if(creditC.length()<9){
+   if(creditC.length()<9){           // If inputted credit card is less than 9 digits
       System.out.println("Credit card must be at least 9 digits");
       
     }
   for (int i = 0; i < creditC.length(); i++) {
    num[i] = Integer.parseInt(creditC.substring(i, i + 1));
   }
-  for (int i = num.length - 2; i >= 0; i = i - 2) {
+  for (int i = num.length - 2; i >= 0; i = i - 2) {  //Takes every other number from the credit card and doubles it
    int l = num[i];
-   l = l * (2);
-   if ( l > 9) {
+   l = l * (2); 
+   if ( l > 9) {     //If the number is greater than 9, it adds the two numbers within the 2 digit number together 
     l = l % (10) + 1;
    }
    num [i] = l;
@@ -101,10 +118,10 @@ class CustomerSystem{
   for (int i = 0; i < num.length; i++) {
    sum = sum + num[i];
   }
-  if (sum % 10 == 0) {
+  if (sum % 10 == 0) { //Does modulus 10 of the two added parts (sum). If result is 0, credit card is valid/boolean returns true
    return true;
   } 
-  else {
+  else { // Modulus 10 of sum did not return 0, invalid credit card/boolean returns false
     return false;
   }
  }
