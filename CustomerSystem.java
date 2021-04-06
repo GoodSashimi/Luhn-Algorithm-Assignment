@@ -2,12 +2,14 @@
 
 
 
-
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 // More packages may be imported in the space below
 
 class CustomerSystem{
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException{
         // Please do not edit any of these variables
         Scanner reader = new Scanner(System.in);
         String userInput, enterCustomerOption, generateCustomerOption, exitCondition;
@@ -24,7 +26,7 @@ class CustomerSystem{
 
             if (userInput.equals(enterCustomerOption)){
                 // Only the line below may be editted based on the parameter list and how you design the method return
-		        // Any necessary variables may be added to this if section, but nowhere else in the code
+		            // Any necessary variables may be added to this if section, but nowhere else in the code
                 enterCustomerInfo();
             }
             else if (userInput.equals(generateCustomerOption)) {
@@ -41,7 +43,7 @@ class CustomerSystem{
         System.out.println("Program Terminated");
     }
     public static void printMenu(){
-        System.out.println("Customer and Sales System\n")
+        System.out.println("Customer and Sales System\n"
         .concat("1. Enter Customer Information\n")
         .concat("2. Generate Customer data file\n")
         .concat("3. Report on total Sales (Not done in this part)\n")
@@ -55,77 +57,111 @@ class CustomerSystem{
     * The method may not nesessarily be a void return type
     * This method may also be broken down further depending on your algorithm
     */
-    public static void enterCustomerInfo() {
-    Scanner reader = new Scanner(System.in);
-    System.out.println("----------EnterCustomerInfo----------");
-    System.out.println();
-    System.out.println("-----What is your FIRST name?-----");
-    String fn = reader.nextLine();
-    System.out.println();
-    System.out.println("-----What is your LAST name?-----");
-    String ln = reader.nextLine();
-    System.out.println();
-    System.out.println("-----What CITY do you reside in?-----");
-    String city = reader.nextLine();
-    System.out.println();
-    System.out.println("-----What is your POSTAL CODE?-----");
-    String pc = reader.nextLine();
-    System.out.println();
-    System.out.println("-----Finally, what is your CREDIT CARD NUMBER?-----");
-    String CCnum = reader.nextLine();
+    public static void enterCustomerInfo() throws IOException{
+        Scanner reader = new Scanner(System.in);
+        System.out.println("----------EnterCustomerInfo----------");
+        System.out.println();
+        System.out.println("-----What is your FIRST name?-----");
+        String fn = reader.nextLine();
+        System.out.println();
+        System.out.println("-----What is your LAST name?-----");
+        String ln = reader.nextLine();
+        System.out.println();
+        System.out.println("-----What CITY do you reside in?-----");
+        String city = reader.nextLine();
+        System.out.println();
 
-    boolean validateCreditCard = validateCreditCard(CCnum);                          //I AM STUCK ON HOW TO IMPLEMENT A WHILE LOOP TO ALLOW THEM TO RE-ENTER AN INVALID INPUT AT A CREDIT CARD NUMBER
-  if(validateCreditCard == true){
-    System.out.println("Valid credit card number");
- }
-  else{
-    System.out.println("Invalid credit card number");
-  }
-}
+        boolean postalCheck = false;
+        while (postalCheck == false){
+            System.out.println("-----What is your POSTAL CODE?-----");
+            String pc = reader.nextLine();
+            postalCheck = validatePostalCode(pc);
+        }
+        
+        System.out.println();
+        System.out.println("-----Finally, what is your CREDIT CARD NUMBER?-----");
+        String CCnum = reader.nextLine();
+
+        boolean validateCreditCard = validateCreditCard(CCnum);                          //I AM STUCK ON HOW TO IMPLEMENT A WHILE LOOP TO ALLOW THEM TO RE-ENTER AN INVALID INPUT AT A CREDIT CARD NUMBER
+            if(validateCreditCard == true){
+              System.out.println("Valid credit card number");
+            }
+            else{
+              System.out.println("Invalid credit card number");
+            }
+      }
     /*
     * This method may be edited to achieve the task however you like.
     * The method may not nesessarily be a void return type
     * This method may also be broken down further depending on your algorithm
     */
-    public static void validatePostalCode(){
+    public static boolean validatePostalCode(String text) throws IOException{
+      
+        int lengthVerification = text.length();  //This is used to make sure the postal code has the correct amount of characters, being 7 including the space ex. (ABC ABC)
+        if (lengthVerification > 7 || lengthVerification < 7){
+            return false;
+        }
+        
+        char spaceCheck = text.charAt(3); //This grabs the charcter in the 3rd place, which should be a ' '
+
+        if (spaceCheck != ' '){ //This is used to make sure that the space is the 3rd(4th) character
+            return false;
+        }
+
+        text = text.toUpperCase();  //This makes all letters upper case
+
+        String postalSlice = text.substring(0, 3); //This assigns the important portion of the postal code, being the first 3 characters, to a string 
+
+        String filename = "postal_codes.csv"; //Sets a string as the file name
+        BufferedReader reader = new BufferedReader(new FileReader(filename)); //Reads the string file
+        String line = reader.readLine(); //Sets the first line as the string line
+        
+        while (line != null){ //While line still has something assigned to it
+            if (line.contains(postalSlice)){ //Check if the postal code slice exists in the line
+                return true; //if it does exist, return true
+            }
+            line = reader.readLine();//Advance to the next line
+        }
+      
+        reader.close();
+        return false; //If the statement above is not satisfied then the postal code is false
     }
+
     /*
     * This method may be edited to achieve the task however you like.
     * The method may not nesessarily be a void return type
     * This method may also be broken down further depending on your algorithm
     */                    
   
- public static boolean validateCreditCard(String creditC){                            //Is this ok? did i mess up the method? PLEASE CHECK IF POSSIBLE. (I did caps to grab attention, no anger!)
-    int[] num = new int[creditC.length()];
+    public static boolean validateCreditCard(String creditC){                            //Is this ok? did i mess up the method? PLEASE CHECK IF POSSIBLE. (I did caps to grab attention, no anger!)
+        int[] num = new int[creditC.length()];
         creditC = creditC.replaceAll("\\s+",""); //Removes any spaces that the user may have inputted
- System.out.println(creditC);
-   if(creditC.length()<9){           // If inputted credit card is less than 9 digits
-      System.out.println("Credit card must be at least 9 digits");
-      
+        System.out.println(creditC);
+        if(creditC.length()<9){           // If inputted credit card is less than 9 digits
+          System.out.println("Credit card must be at least 9 digits");
+        }
+        for (int i = 0; i < creditC.length(); i++) {
+          num[i] = Integer.parseInt(creditC.substring(i, i + 1));
+        }
+        for (int i = num.length - 2; i >= 0; i = i - 2) {  //Takes every other number from the credit card and doubles it
+            int l = num[i];
+            l = l * (2); 
+            if ( l > 9) {     //If the number is greater than 9, it adds the two numbers within the 2 digit number together 
+                l = l % (10) + 1;
+            }
+            num [i] = l;
+        } 
+        int sum = (0);
+        for (int i = 0; i < num.length; i++) {
+            sum = sum + num[i];
+        }
+        if (sum % 10 == 0) { //Does modulus 10 of the two added parts (sum). If result is 0, credit card is valid/boolean returns true
+            return true;
+        } 
+        else { // Modulus 10 of sum did not return 0, invalid credit card/boolean returns false
+            return false;
+        }
     }
-  for (int i = 0; i < creditC.length(); i++) {
-   num[i] = Integer.parseInt(creditC.substring(i, i + 1));
-  }
-  for (int i = num.length - 2; i >= 0; i = i - 2) {  //Takes every other number from the credit card and doubles it
-   int l = num[i];
-   l = l * (2); 
-   if ( l > 9) {     //If the number is greater than 9, it adds the two numbers within the 2 digit number together 
-    l = l % (10) + 1;
-   }
-   num [i] = l;
-  }
-  int sum = (0);
-  for (int i = 0; i < num.length; i++) {
-   sum = sum + num[i];
-  }
-  if (sum % 10 == 0) { //Does modulus 10 of the two added parts (sum). If result is 0, credit card is valid/boolean returns true
-   return true;
-  } 
-  else { // Modulus 10 of sum did not return 0, invalid credit card/boolean returns false
-    return false;
-  }
- }
-}
     
     /*
     * This method may be edited to achieve the task however you like.
