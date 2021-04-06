@@ -41,7 +41,7 @@ class CustomerSystem{
         System.out.println("Program Terminated");
     }
     public static void printMenu(){
-        System.out.println("Customer and Sales System\n"
+        System.out.println("Customer and Sales System\n")
         .concat("1. Enter Customer Information\n")
         .concat("2. Generate Customer data file\n")
         .concat("3. Report on total Sales (Not done in this part)\n")
@@ -69,33 +69,46 @@ class CustomerSystem{
     * The method may not nesessarily be a void return type
     * This method may also be broken down further depending on your algorithm
     */
-    public static void validateCreditCard(){
-        (String word)
-    }
-    int[] nums = new int[word.length()];
-    for (int i = 0; i < word.length(); i++) {
-        nums[i] = Integer.parseInt(word.substring(i, i + 1));
-    }
-    for (int i = nums.length - 2; i >= 0; i = i - 2) {
-        int j = nums[i];
-        j = j * 2;
-        if (j > 9) {
-            j = j % 10 + 1;
-        }
-        nums[i] = j;
-    }
-    int sum =0;
-    for (int i =0; i < nums.length;i++) {
-        sum += nums[i];
-    }
-    if (sum%10==0) {
-        System.out.println(word + " is a valid credit card number");
-    } else {
-        System.out.println(word + " is an invalid credit card number");
-    }
-}
+    boolean validateCreditCard = verifyCC(CCnum);
+  if(validateCreditCard == true){
+    System.out.println("Valid credit card number");
  }
- 
+  else{
+    System.out.println("Invalid credit card number");
+  }
+ }
+  
+ public static boolean verifyCC(String creditC){
+    int[] num = new int[creditC.length()];
+        creditC = creditC.replaceAll("\\s+","");
+ System.out.println(creditC);
+   if(creditC.length()<9){
+      System.out.println("Credit card must be at least 9 digits");
+      
+    }
+  for (int i = 0; i < creditC.length(); i++) {
+   num[i] = Integer.parseInt(creditC.substring(i, i + 1));
+  }
+  for (int i = num.length - 2; i >= 0; i = i - 2) {
+   int l = num[i];
+   l = l * (2);
+   if ( l > 9) {
+    l = l % (10) + 1;
+   }
+   num [i] = l;
+  }
+  int sum = (0);
+  for (int i = 0; i < num.length; i++) {
+   sum = sum + num[i];
+  }
+  if (sum % 10 == 0) {
+   return true;
+  } 
+  else {
+    return false;
+  }
+ }
+}
     
     /*
     * This method may be edited to achieve the task however you like.
