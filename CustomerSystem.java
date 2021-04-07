@@ -4,8 +4,11 @@
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
+import java.io.File;
 // More packages may be imported in the space below
 
 class CustomerSystem{
@@ -18,7 +21,7 @@ class CustomerSystem{
         exitCondition = "9";
 
         // More variables for the main may be declared in the space below
-
+        String customerInfo = ("");
 
         do{
             printMenu();                                    // Printing out the main menu
@@ -27,11 +30,11 @@ class CustomerSystem{
             if (userInput.equals(enterCustomerOption)){
                 // Only the line below may be editted based on the parameter list and how you design the method return
 		            // Any necessary variables may be added to this if section, but nowhere else in the code
-                enterCustomerInfo();
+                customerInfo = enterCustomerInfo();
             }
             else if (userInput.equals(generateCustomerOption)) {
                 // Only the line below may be editted based on the parameter list and how you design the method return
-                generateCustomerDataFile();
+                generateCustomerDataFile(customerInfo);
             }
             else{
                 System.out.println("Please type in a valid option (A number from 1-9)");
@@ -57,39 +60,50 @@ class CustomerSystem{
     * The method may not nesessarily be a void return type
     * This method may also be broken down further depending on your algorithm
     */
-    public static void enterCustomerInfo() throws IOException{
+    public static String enterCustomerInfo() throws IOException{
         Scanner reader = new Scanner(System.in);
         System.out.println("----------EnterCustomerInfo----------");
-        System.out.println();
-        System.out.println("-----What is your FIRST name?-----");
+        
+        System.out.println("\n-----What is your FIRST name?-----");
         String fn = reader.nextLine();
-        System.out.println();
-        System.out.println("-----What is your LAST name?-----");
+        
+        System.out.println("\n-----What is your LAST name?-----");
         String ln = reader.nextLine();
-        System.out.println();
-        System.out.println("-----What CITY do you reside in?-----");
+        
+        System.out.println("\n-----What CITY do you reside in?-----");
         String city = reader.nextLine();
-        System.out.println();
+        
 
         boolean postalCheck = false;
+        String pc = ("");
         while (postalCheck == false){
-            System.out.println("-----What is your POSTAL CODE?-----");
-            String pc = reader.nextLine();
+
+            System.out.println("\n-----What is your POSTAL CODE?-----");
+            pc = reader.nextLine();
             postalCheck = validatePostalCode(pc);
         }
         
-        System.out.println();
-        System.out.println("-----Finally, what is your CREDIT CARD NUMBER?-----");
-        String CCnum = reader.nextLine();
+        String CCnum = ("");
+        boolean validateCreditCard = false;
+        while (validateCreditCard == false){
 
-        boolean validateCreditCard = validateCreditCard(CCnum);                          //I AM STUCK ON HOW TO IMPLEMENT A WHILE LOOP TO ALLOW THEM TO RE-ENTER AN INVALID INPUT AT A CREDIT CARD NUMBER
+            System.out.println("\n-----Finally, what is your CREDIT CARD NUMBER?-----");
+            CCnum = reader.nextLine();
+    
+            validateCreditCard = validateCreditCard(CCnum);                          //I AM STUCK ON HOW TO IMPLEMENT A WHILE LOOP TO ALLOW THEM TO RE-ENTER AN INVALID INPUT AT A CREDIT CARD NUMBER
             if(validateCreditCard == true){
-              System.out.println("Valid credit card number");
+                System.out.println("Valid credit card number");
             }
             else{
-              System.out.println("Invalid credit card number");
+                System.out.println("Invalid credit card number");
             }
-      }
+        }
+
+        String compiledInfo = (fn+", "+ln+", "+city+", "+pc+", "+CCnum);
+        System.out.println ("Customer Information Recieved!\n");
+        return compiledInfo;
+    }
+    
     /*
     * This method may be edited to achieve the task however you like.
     * The method may not nesessarily be a void return type
@@ -132,8 +146,7 @@ class CustomerSystem{
     * The method may not nesessarily be a void return type
     * This method may also be broken down further depending on your algorithm
     */                    
-  
-    public static boolean validateCreditCard(String creditC){                            //Is this ok? did i mess up the method? PLEASE CHECK IF POSSIBLE. (I did caps to grab attention, no anger!)
+    public static boolean validateCreditCard(String creditC){
         int[] num = new int[creditC.length()];
         creditC = creditC.replaceAll("\\s+",""); //Removes any spaces that the user may have inputted
         System.out.println(creditC);
@@ -168,26 +181,29 @@ class CustomerSystem{
     * The method may not nesessarily be a void return type
     * This method may also be broken down further depending on your algorithm
     */
-    public static void generateCustomerDataFile() throws IOException{
+    public static void generateCustomerDataFile(String customerInfo) throws IOException{
         Scanner reader = new Scanner(System.in);
 
-        System.out.println ("\nWhat file would you like to write to? If the file name already exists, it will write to that one instead.");
-        System.out.println ("Please remember to put .csv at the end of the file name\n");
-        String filename = reader.nextLine();
+        if (!customerInfo.equals("")){
+            System.out.println ("\nWhat file would you like to write to? If the file name already exists, it will write to that one instead.");
+            System.out.println ("Please remember to put .csv at the end of the file name\n");
+            String filename = reader.nextLine();
 
-        filename = csvCheck(filename);
+            filename = csvCheck(filename);
 
-        File fileCheck = new File(filename);
+            File fileCheck = new File(filename);
 
-        
-        if (fileCheck.isFile()){
-            existingFileWrite(filename, fn, ln, city, pc, cc);
+            
+            if (fileCheck.isFile()){
+                existingFileWrite(filename, customerInfo);
+            }
+            else{
+                newFileWrite(filename, customerInfo);
+            }
         }
         else{
-            newFileWrite(filename, fn, ln, city, pc, cc);
+            System.out.println ("\nPlease input Customer Info first\n");
         }
-
-        reader.close();
     }
 
     public static String csvCheck (String filename){
@@ -205,34 +221,37 @@ class CustomerSystem{
                 filename = reader.nextLine();
             }
         }
-        reader.close();
         return filename;
     }
 
-    public static void newFileWrite (String filename, String fn, String ln, String city, String pc, String cc) throws IOException{
+    public static void newFileWrite (String filename, String customerInfo) throws IOException{
         PrintWriter writer = new PrintWriter(new File(filename));
         StringBuilder sb = new StringBuilder();
 
         
         sb.append("First Name, Last Name, City, Postal Code, Credit Card, ID\n");
-        sb.append(fn+", "+ln+", "+city+", "+pc+", "+cc+", 1");
+        sb.append(customerInfo+", 1");
 
         
 
         writer.write(sb.toString());
 
         writer.close();
+
+        System.out.println("New file named "+filename+" was made and customer information successfully stored\n");
         
     }
 
-    public static void existingFileWrite (String filename, String fn, String ln, String city, String pc, String cc) throws IOException{
+    public static void existingFileWrite (String filename, String customerInfo) throws IOException{
         FileWriter pw = new FileWriter(filename, true);
 
         int id = idAssign(filename);
 
-        pw.append("\n"+fn+", "+ln+", "+city+", "+pc+", "+cc+", "+id);
+        pw.append("\n"+customerInfo+", "+id);
 
         pw.close();
+
+        System.out.println("Customer information successfully stored\n");
     }
 
     public static int idAssign (String filename) throws IOException{
@@ -246,11 +265,7 @@ class CustomerSystem{
         
         line = line.replaceAll("\\s+","");
         int lastID = Integer.parseInt(line);
-        int id = lastID + 1;
-        System.out.println(lastID);
-
-        reader.close();
-        return id;
+        return lastID + 1;
     }
     /*******************************************************************
     *       ADDITIONAL METHODS MAY BE ADDED BELOW IF NECESSARY         *
