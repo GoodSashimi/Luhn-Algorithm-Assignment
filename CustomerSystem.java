@@ -168,7 +168,89 @@ class CustomerSystem{
     * The method may not nesessarily be a void return type
     * This method may also be broken down further depending on your algorithm
     */
-    public static void generateCustomerDataFile(){
+    public static void generateCustomerDataFile() throws IOException{
+        Scanner reader = new Scanner(System.in);
+
+        System.out.println ("\nWhat file would you like to write to? If the file name already exists, it will write to that one instead.");
+        System.out.println ("Please remember to put .csv at the end of the file name\n");
+        String filename = reader.nextLine();
+
+        filename = csvCheck(filename);
+
+        File fileCheck = new File(filename);
+
+        
+        if (fileCheck.isFile()){
+            existingFileWrite(filename, fn, ln, city, pc, cc);
+        }
+        else{
+            newFileWrite(filename, fn, ln, city, pc, cc);
+        }
+
+        reader.close();
+    }
+
+    public static String csvCheck (String filename){
+
+        Scanner reader = new Scanner(System.in);
+
+        boolean csvCheck = false;
+
+        while (csvCheck == false){   
+            if (filename.contains(".csv")){
+                csvCheck = true;
+            }
+            else{
+                System.out.println ("\nPlease remember to attach .csv to the end of the file name (ex. CustomerFile.csv)");
+                filename = reader.nextLine();
+            }
+        }
+        reader.close();
+        return filename;
+    }
+
+    public static void newFileWrite (String filename, String fn, String ln, String city, String pc, String cc) throws IOException{
+        PrintWriter writer = new PrintWriter(new File(filename));
+        StringBuilder sb = new StringBuilder();
+
+        
+        sb.append("First Name, Last Name, City, Postal Code, Credit Card, ID\n");
+        sb.append(fn+", "+ln+", "+city+", "+pc+", "+cc+", 1");
+
+        
+
+        writer.write(sb.toString());
+
+        writer.close();
+        
+    }
+
+    public static void existingFileWrite (String filename, String fn, String ln, String city, String pc, String cc) throws IOException{
+        FileWriter pw = new FileWriter(filename, true);
+
+        int id = idAssign(filename);
+
+        pw.append("\n"+fn+", "+ln+", "+city+", "+pc+", "+cc+", "+id);
+
+        pw.close();
+    }
+
+    public static int idAssign (String filename) throws IOException{
+        Scanner reader = new Scanner(new File(filename)); //Reads the string file
+        reader.useDelimiter(",");
+        String line = reader.next();
+        
+        while (reader.hasNext()){ //While line still has something assigned to it
+            line = reader.next();//Advance to the next line
+        }
+        
+        line = line.replaceAll("\\s+","");
+        int lastID = Integer.parseInt(line);
+        int id = lastID + 1;
+        System.out.println(lastID);
+
+        reader.close();
+        return id;
     }
     /*******************************************************************
     *       ADDITIONAL METHODS MAY BE ADDED BELOW IF NECESSARY         *
