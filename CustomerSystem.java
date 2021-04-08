@@ -66,7 +66,7 @@ class CustomerSystem{
     * This method may also be broken down further depending on your algorithm
     */
     /**
-     * 
+     * Collects all userinputs and compiles them into a string
      * @return returns a compiled string of all the customer info
      * @throws IOException input and output errors are thrown
      */
@@ -101,7 +101,7 @@ class CustomerSystem{
         boolean validateCreditCard = false;
         while (validateCreditCard == false){//Allows for the re-entering of an incorrect credit card number using a while loop
 
-            System.out.println("\n-----Finally, what is your CREDIT CARD NUMBER? (do not use any spaces)-----");
+            System.out.println("\n-----Finally, what is your CREDIT CARD NUMBER?-----");
             CCnum = reader.nextLine();
     
             validateCreditCard = validateCreditCard(CCnum); //Summons a further down method responsible for checking the validity of a user inputted credit card number to do so                        
@@ -109,7 +109,7 @@ class CustomerSystem{
                 System.out.println("Valid credit card number"); //Output for a valid credit card number
             }
             else{
-                System.out.println("Invalid credit card number (remove any spaces as well and try again)"); //Output for an invalid credit card number
+                System.out.println("Invalid credit card number "); //Output for an invalid credit card number
             }
         }
 
@@ -169,13 +169,13 @@ class CustomerSystem{
     * This method may also be broken down further depending on your algorithm
     */         
     /**
-     * 
+     * Checks the userinputted credit card to make sure its valid
      * @param creditC is checked againsed the luhn algorithm to check for credit card authenticity 
      * @return returns either a boolean=true of a boolean=false, depending if the userinputted creditcardnumber was valid/invalid.
      */           
     public static boolean validateCreditCard(String creditC)
 {
-    creditC = creditC.replaceAll("\\s+",""); //Removes any spaces that the user may have inputted, for some reason i couldnt manage to make it remove the spaces int he card number AND work with the rest of the code
+    creditC = creditC.replaceAll("\\s+",""); //Removes any spaces that the user may have inputted
     System.out.println(creditC);  //Useless output just showing that the program DOES remove spaces from a credit card number
     
     // If inputted credit card is less than 9 digits outputs this and ets the user re-input the credit card number
