@@ -12,7 +12,7 @@ import java.io.File;
 // More packages may be imported in the space below
 
 /**
- * @author  Anson Sy A Chin <335472759@gapps.yrdsb.ca>, (Add yourself and your email)
+ * @author  Anson Sy A Chin <335472759@gapps.yrdsb.ca> , Robert Todica <348889643@gapps.yrdsb.ca>
  * @version 1.0
  * @since 1.0
  */
@@ -65,52 +65,57 @@ class CustomerSystem{
     * The method may not nesessarily be a void return type
     * This method may also be broken down further depending on your algorithm
     */
+    /**
+     * 
+     * @return returns a compiled string of all the customer info
+     * @throws IOException input and output errors are thrown
+     */
     public static String enterCustomerInfo() throws IOException{
         Scanner reader = new Scanner(System.in);
-        System.out.println("----------EnterCustomerInfo----------");
+        System.out.println("----------EnterCustomerInfo----------"); //Opening to the "enterCustomerInfo" method showing you have entered it
         
-        System.out.println("\n-----What is your FIRST name?-----");
-        String fn = reader.nextLine();
+        System.out.println("\n-----What is your FIRST name?-----"); //Asks for first name
+        String fn = reader.nextLine();  //Userinputted value for first name is stored as variable "fn"
         
-        System.out.println("\n-----What is your LAST name?-----");
-        String ln = reader.nextLine();
+        System.out.println("\n-----What is your LAST name?-----"); //Asks for last name
+        String ln = reader.nextLine();//Userinputted value for last name is stored as variable "ln"
         
-        System.out.println("\n-----What CITY do you reside in?-----");
-        String city = reader.nextLine();
+        System.out.println("\n-----What CITY do you reside in?-----"); // Asks for city of residence
+        String city = reader.nextLine();//Userinputted value for city of residence is stored as variable "city"
         
 
         boolean postalCheck = false;
         String pc = ("");
-        while (postalCheck == false){
+        while (postalCheck == false){  //Allows for the re-entering of an incorrect postal code using a while loop
 
-            System.out.println("\n-----What is your POSTAL CODE?-----");
+            System.out.println("\n-----What is your POSTAL CODE?-----"); //Asks user for postal code
             pc = reader.nextLine();
-            postalCheck = validatePostalCode(pc);
+            postalCheck = validatePostalCode(pc); //Summons a further method responsible for checking the postal code to do so    
             
-            if (postalCheck == false){
+            if (postalCheck == false){ //Output if the postal code is incorrect
                 System.out.println ("Invalid postal code, please retry with proper formatting (ex. OOO_OOO)");
             }
         }
         
         String CCnum = ("");
         boolean validateCreditCard = false;
-        while (validateCreditCard == false){
+        while (validateCreditCard == false){//Allows for the re-entering of an incorrect credit card number using a while loop
 
             System.out.println("\n-----Finally, what is your CREDIT CARD NUMBER?-----");
             CCnum = reader.nextLine();
     
-            validateCreditCard = validateCreditCard(CCnum);                          //I AM STUCK ON HOW TO IMPLEMENT A WHILE LOOP TO ALLOW THEM TO RE-ENTER AN INVALID INPUT AT A CREDIT CARD NUMBER
+            validateCreditCard = validateCreditCard(CCnum); //Summons a further down method responsible for checking the validity of a user inputted credit card number to do so                        
             if(validateCreditCard == true){
-                System.out.println("Valid credit card number");
+                System.out.println("Valid credit card number"); //Output for a valid credit card number
             }
             else{
-                System.out.println("Invalid credit card number");
+                System.out.println("Invalid credit card number"); //Output for an invalid credit card number
             }
         }
 
-        String compiledInfo = (fn+", "+ln+", "+city+", "+pc+", "+CCnum);
-        System.out.println ("Customer Information Recieved!\n");
-        return compiledInfo;
+        String compiledInfo = (fn+", "+ln+", "+city+", "+pc+", "+CCnum); //Outputs a compiled text including first name,last name,city,postal code and credit card number that the user previously inputted
+        System.out.println ("Customer Information Recieved!\n"); //All inputs went through/postal code check and credit card check passed as valid
+        return compiledInfo;  
     }
     
     /*
@@ -162,22 +167,27 @@ class CustomerSystem{
     * This method may be edited to achieve the task however you like.
     * The method may not nesessarily be a void return type
     * This method may also be broken down further depending on your algorithm
-    */                    
+    */         
+    /**
+     * 
+     * @param creditC is checked againsed the luhn algorithm to check for credit card authenticity 
+     * @return returns either a boolean=true of a boolean=false, depending if the userinputted creditcardnumber was valid/invalid.
+     */           
     public static boolean validateCreditCard(String creditC){
         int[] num = new int[creditC.length()];
-        creditC = creditC.replaceAll("\\s+",""); //Removes any spaces that the user may have inputted
-        System.out.println(creditC);
-        if(creditC.length()<9){           // If inputted credit card is less than 9 digits
+        creditC = creditC.replaceAll("\\s+",""); //Removes any spaces that the user may have inputted, for some reason i couldnt manage to make it remove the spaces int he card number AND work with the rest of the code
+        System.out.println(creditC);  //Useless output just showing that the program DOES remove spaces from a credit card number
+        if(creditC.length()<9){           // If inputted credit card is less than 9 digits outputs this and ets the user re-input the credit card number
           System.out.println("Credit card must be at least 9 digits");
         }
-        for (int i = 0; i < creditC.length(); i++) {
-          num[i] = Integer.parseInt(creditC.substring(i, i + 1));
-        }
-        for (int i = num.length - 2; i >= 0; i = i - 2) {  //Takes every other number from the credit card and doubles it
+        for (int i = 0; i < creditC.length(); i++) { //for loop that checks the lenght of the credit card number, and while the value of i is less than that, i will increase 
+          num[i] = Integer.parseInt(creditC.substring(i, i + 1));//The parseint will temporary convert the int to a string, and then the substrign will take out one of the integers, getting increased by one each time (i+1)
+        }                                                        //^^This is what takes out every other number necessary for the lugn algorithm
+        for (int i = num.length - 2; i >= 0; i = i - 2) {  
             int l = num[i];
-            l = l * (2); 
-            if ( l > 9) {     //If the number is greater than 9, it adds the two numbers within the 2 digit number together 
-                l = l % (10) + 1;
+            l = l * (2); //Multiplies the number by two
+            if ( l > 9) {     //If statement for if the number is greater than 9 
+                l = l % (10) + 1; // If above if statement is entered, it adds the two numbers within the 2 digit number together
             }
             num [i] = l;
         } 
@@ -186,10 +196,10 @@ class CustomerSystem{
             sum = sum + num[i];
         }
         if (sum % 10 == 0) { //Does modulus 10 of the two added parts (sum). If result is 0, credit card is valid/boolean returns true
-            return true;
+            return true; //returns true (credit card is valid)
         } 
         else { // Modulus 10 of sum did not return 0, invalid credit card/boolean returns false
-            return false;
+            return false; //returns false (credit card is not valid)
         }
     }
     
