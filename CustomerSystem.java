@@ -173,50 +173,49 @@ class CustomerSystem{
      * @param creditC is checked againsed the luhn algorithm to check for credit card authenticity 
      * @return returns either a boolean=true of a boolean=false, depending if the userinputted creditcardnumber was valid/invalid.
      */           
-    public static boolean validateCreditCard(String creditC)
-{
-    creditC = creditC.replaceAll("\\s+",""); //Removes any spaces that the user may have inputted
-    System.out.println(creditC);  //Useless output just showing that the program DOES remove spaces from a credit card number
-    
-    // If inputted credit card is less than 9 digits outputs this and ets the user re-input the credit card number
-    if(creditC.length() < 9)
-    {
-        System.out.println("Credit card must be at least 9 digits");
-        return false;
-    }
-
-    
-    String numberReversed = "";
-    for(int i = creditC.length()-1; i >= 0; i--){ //Reverses the order of the numbers 
-        numberReversed += creditC.charAt(i);
-    }
-    
-    // gets sum 1
-    int sum1 = 0;
-    for(int i = 0; i < numberReversed.length(); i += 2){ //Collects every odd number and adds them to get sum 1
-        sum1 += Integer.parseInt(String.valueOf(numberReversed.charAt(i)));
-    }
-
-    // gets sum2
-    int sum2 = 0;
-    for(int i = 1; i < numberReversed.length(); i += 2){
-        int temp = Integer.parseInt(String.valueOf(numberReversed.charAt(i)))*2; //Every even number is taken here and multiplied by 2
-        if(temp > 9) //If the multiplied by 2 number is bigger than 9, the two numbers within that is added together
+    public static boolean validateCreditCard(String creditC) {
+        creditC = creditC.replaceAll("\\s+",""); //Removes any spaces that the user may have inputted
+        System.out.println(creditC);  //Useless output just showing that the program DOES remove spaces from a credit card number
+        
+        // If inputted credit card is less than 9 digits outputs this and ets the user re-input the credit card number
+        if(creditC.length() < 9)
         {
-            temp = temp/10 + temp%10;
+            System.out.println("Credit card must be at least 9 digits");
+            return false;
         }
-        sum2 += temp;
-    }
-    int sumt = sum1+sum2;
 
-    // modulus of 10 determine if ends with 0
-    if(sumt%10 == 0){
-        return true; //Ended in zero meaning the credit card was valid
+        
+        String numberReversed = "";
+        for(int i = creditC.length()-1; i >= 0; i--){ //Reverses the order of the numbers 
+            numberReversed += creditC.charAt(i);
+        }
+        
+        // gets sum 1
+        int sum1 = 0;
+        for(int i = 0; i < numberReversed.length(); i += 2){ //Collects every odd number and adds them to get sum 1
+            sum1 += Integer.parseInt(String.valueOf(numberReversed.charAt(i)));
+        }
+
+        // gets sum2
+        int sum2 = 0;
+        for(int i = 1; i < numberReversed.length(); i += 2){
+            int temp = Integer.parseInt(String.valueOf(numberReversed.charAt(i)))*2; //Every even number is taken here and multiplied by 2
+            if(temp > 9) //If the multiplied by 2 number is bigger than 9, the two numbers within that is added together
+            {
+                temp = temp/10 + temp%10;
+            }
+            sum2 += temp;
+        }
+        int sumt = sum1+sum2;
+
+        // modulus of 10 determine if ends with 0
+        if(sumt%10 == 0){
+            return true; //Ended in zero meaning the credit card was valid
+        }
+        else{ //Did not end is zero meaning the credit card was false
+            return false;
+        }
     }
-    else{ //Did not end is zero meaning the credit card was false
-        return false;
-    }
-}
     
     /*
     * This method may be edited to achieve the task however you like.
