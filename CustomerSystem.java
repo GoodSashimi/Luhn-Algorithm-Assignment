@@ -11,6 +11,11 @@ import java.util.Scanner;
 import java.io.File;
 // More packages may be imported in the space below
 
+/**
+ * @author  Anson Sy A Chin <335472759@gapps.yrdsb.ca>, (Add yourself and your email)
+ * @version 1.0
+ * @since 1.0
+ */
 class CustomerSystem{
     public static void main(String[] args) throws IOException{
         // Please do not edit any of these variables
@@ -81,6 +86,10 @@ class CustomerSystem{
             System.out.println("\n-----What is your POSTAL CODE?-----");
             pc = reader.nextLine();
             postalCheck = validatePostalCode(pc);
+            
+            if (postalCheck == false){
+                System.out.println ("Invalid postal code, please retry with proper formatting (ex. OOO_OOO)");
+            }
         }
         
         String CCnum = ("");
@@ -109,6 +118,14 @@ class CustomerSystem{
     * The method may not nesessarily be a void return type
     * This method may also be broken down further depending on your algorithm
     */
+
+    /**
+     * Validates the inputted postal code.
+     * 
+     * @param text string contains the inputted postal code
+     * @return true if the postal code is in the csv, false if not
+     * @throws IOException Input and Output errors are thrown
+     */
     public static boolean validatePostalCode(String text) throws IOException{
       
         int lengthVerification = text.length();  //This is used to make sure the postal code has the correct amount of characters, being 7 including the space ex. (ABC ABC)
@@ -127,17 +144,17 @@ class CustomerSystem{
         String postalSlice = text.substring(0, 3); //This assigns the important portion of the postal code, being the first 3 characters, to a string 
 
         String filename = "postal_codes.csv"; //Sets a string as the file name
-        BufferedReader reader = new BufferedReader(new FileReader(filename)); //Reads the string file
-        String line = reader.readLine(); //Sets the first line as the string line
+        BufferedReader csvReader = new BufferedReader(new FileReader(filename)); //Reads the string file
+        String line = csvReader.readLine(); //Sets the first line as the string line
         
         while (line != null){ //While line still has something assigned to it
             if (line.contains(postalSlice)){ //Check if the postal code slice exists in the line
                 return true; //if it does exist, return true
             }
-            line = reader.readLine();//Advance to the next line
+            line = csvReader.readLine();//Advance to the next line
         }
       
-        reader.close();
+        csvReader.close();
         return false; //If the statement above is not satisfied then the postal code is false
     }
 
@@ -181,92 +198,127 @@ class CustomerSystem{
     * The method may not nesessarily be a void return type
     * This method may also be broken down further depending on your algorithm
     */
+
+    /**
+     * Using other methods, this method takes a user's information and either saves it to an existing .csv file
+     * or creates a new .csv file and saves it there 
+     * 
+     * @param customerInfo this string holds all the customer information
+     * @throws IOException Input and Output errors are thrown
+     */
     public static void generateCustomerDataFile(String customerInfo) throws IOException{
-        Scanner reader = new Scanner(System.in);
+        Scanner reader = new Scanner(System.in);//initialize scanner
 
-        if (!customerInfo.equals("")){
-            System.out.println ("\nWhat file would you like to write to? If the file name already exists, it will write to that one instead.");
+        if (!customerInfo.equals("")){//if there customer info is not blank
+            System.out.println ("\nWhat directory would you like to write to? If only a file name is inputted, it will default to the folder this program is in.");//Ask user to input file directory/name
             System.out.println ("Please remember to put .csv at the end of the file name\n");
-            String filename = reader.nextLine();
+            String filename = reader.nextLine();//saves file name/directory to a String
 
-            filename = csvCheck(filename);
+            filename = csvCheck(filename);//Pass filename through a method that checks for .csv in the filename 
 
-            File fileCheck = new File(filename);
+            File fileCheck = new File(filename);//Assign filename to file
 
             
-            if (fileCheck.isFile()){
-                existingFileWrite(filename, customerInfo);
+            if (fileCheck.isFile()){//if file already exists
+                existingFileWrite(filename, customerInfo);//Method that writes to existing file
             }
             else{
-                newFileWrite(filename, customerInfo);
+                newFileWrite(filename, customerInfo);//Method that makes a new file and writes to it
             }
         }
-        else{
-            System.out.println ("\nPlease input Customer Info first\n");
+        else{//if there is no customer info
+            System.out.println ("\nPlease input Customer Info first\n");//Ask the user to input customer info first
         }
     }
 
+    /**
+     * Ensures that the file is a .csv file.
+     * 
+     * @param filename this string has the file name/directory 
+     * @return the filename is returned if the file name has .csv at the end
+     */
     public static String csvCheck (String filename){
 
-        Scanner reader = new Scanner(System.in);
+        Scanner reader = new Scanner(System.in);//initialize scanner
 
-        boolean csvCheck = false;
+        boolean csvCheck = false;//set boolean to false for loop purposes 
 
-        while (csvCheck == false){   
-            if (filename.contains(".csv")){
-                csvCheck = true;
+        while (csvCheck == false){//While check is false   
+            if (filename.contains(".csv")){//if the filename has .csv in it
+                csvCheck = true;//leave loop
             }
             else{
                 System.out.println ("\nPlease remember to attach .csv to the end of the file name (ex. CustomerFile.csv)");
-                filename = reader.nextLine();
+                filename = reader.nextLine();//Ask user to reinput their filename
             }
         }
-        return filename;
+        return filename;//Once they passed the validation, return the filename 
     }
 
+    /**
+     * This method is for writing to a new file.
+     * 
+     * @param filename this string contains the file name
+     * @param customerInfo this string contains all the customer information separated by commas
+     * @throws IOException Input and Output errors are thrown
+     */
     public static void newFileWrite (String filename, String customerInfo) throws IOException{
-        PrintWriter writer = new PrintWriter(new File(filename));
-        StringBuilder sb = new StringBuilder();
+        PrintWriter writer = new PrintWriter(new File(filename)); //Initializes printwriter to a new file
+        StringBuilder sb = new StringBuilder(); //Initialize StringBuilder
 
         
-        sb.append("First Name, Last Name, City, Postal Code, Credit Card, ID\n");
-        sb.append(customerInfo+", 1");
+        sb.append("First Name, Last Name, City, Postal Code, Credit Card, ID\n");//Set up columns 
+        sb.append(customerInfo+", 1");//append user info with preset initial id of 1
 
         
 
-        writer.write(sb.toString());
+        writer.write(sb.toString());//write to file
 
-        writer.close();
+        writer.close();//close writer
 
-        System.out.println("New file named "+filename+" was made and customer information successfully stored\n");
-        
+        System.out.println("New file named "+filename+" was made and customer information successfully stored\n");//give feedback that the method has finished
     }
 
+    /**
+     * This method is for writing to an existing file.
+     * 
+     * @param filename this string contains the file name
+     * @param customerInfo  this string contains all the customer information separated by commas
+     * @throws IOException Input and Output errors are thrown
+     */
     public static void existingFileWrite (String filename, String customerInfo) throws IOException{
-        FileWriter pw = new FileWriter(filename, true);
+        FileWriter pw = new FileWriter(filename, true);//Initialize FileWriter
 
-        int id = idAssign(filename);
+        int id = idAssign(filename);//Retrieve id using idAssign method
 
-        pw.append("\n"+customerInfo+", "+id);
+        pw.append("\n"+customerInfo+", "+id);//Print customer info along with generated id to file
 
-        pw.close();
+        pw.close();//Close FileWriter
 
-        System.out.println("Customer information successfully stored\n");
+        System.out.println("Customer information successfully stored\n");//give feedback that the method has finished
     }
 
+    /**
+     * Finds last id in the file and adds 1 to it.
+     * 
+     * @param filename this string contains the file name
+     * @return id after adding 1 to the last one
+     * @throws IOException Input and Output errors are thrown
+     */
     public static int idAssign (String filename) throws IOException{
         Scanner reader = new Scanner(new File(filename)); //Reads the string file
-        reader.useDelimiter(",");
-        String line = reader.next();
+        reader.useDelimiter(",");//Uses "," as the delimiter
+        String line = reader.next();//Assigns
         
         while (reader.hasNext()){ //While line still has something assigned to it
             line = reader.next();//Advance to the next line
         }
         
-        line = line.replaceAll("\\s+","");
-        int lastID = Integer.parseInt(line);
-        return lastID + 1;
+        line = line.replaceAll("\\s+","");//Remove the space that the number will have in front of it 
+        int lastID = Integer.parseInt(line);//Convert the number from string to int
+        return lastID + 1;//return the new id
     }
+
     /*******************************************************************
     *       ADDITIONAL METHODS MAY BE ADDED BELOW IF NECESSARY         *
     *******************************************************************/
