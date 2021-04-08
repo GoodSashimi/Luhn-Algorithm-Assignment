@@ -101,7 +101,7 @@ class CustomerSystem{
         boolean validateCreditCard = false;
         while (validateCreditCard == false){//Allows for the re-entering of an incorrect credit card number using a while loop
 
-            System.out.println("\n-----Finally, what is your CREDIT CARD NUMBER?-----");
+            System.out.println("\n-----Finally, what is your CREDIT CARD NUMBER? (do not use any spaces)-----");
             CCnum = reader.nextLine();
     
             validateCreditCard = validateCreditCard(CCnum); //Summons a further down method responsible for checking the validity of a user inputted credit card number to do so                        
@@ -109,7 +109,7 @@ class CustomerSystem{
                 System.out.println("Valid credit card number"); //Output for a valid credit card number
             }
             else{
-                System.out.println("Invalid credit card number"); //Output for an invalid credit card number
+                System.out.println("Invalid credit card number (remove any spaces as well and try again)"); //Output for an invalid credit card number
             }
         }
 
