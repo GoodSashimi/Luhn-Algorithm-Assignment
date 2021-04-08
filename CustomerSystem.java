@@ -173,35 +173,50 @@ class CustomerSystem{
      * @param creditC is checked againsed the luhn algorithm to check for credit card authenticity 
      * @return returns either a boolean=true of a boolean=false, depending if the userinputted creditcardnumber was valid/invalid.
      */           
-    public static boolean validateCreditCard(String creditC){
-        int[] num = new int[creditC.length()];
-        creditC = creditC.replaceAll("\\s+",""); //Removes any spaces that the user may have inputted, for some reason i couldnt manage to make it remove the spaces int he card number AND work with the rest of the code
-        System.out.println(creditC);  //Useless output just showing that the program DOES remove spaces from a credit card number
-        if(creditC.length()<9){           // If inputted credit card is less than 9 digits outputs this and ets the user re-input the credit card number
-          System.out.println("Credit card must be at least 9 digits");
-        }
-        for (int i = 0; i < creditC.length(); i++) { //for loop that checks the lenght of the credit card number, and while the value of i is less than that, i will increase 
-          num[i] = Integer.parseInt(creditC.substring(i, i + 1));//The parseint will temporary convert the int to a string, and then the substrign will take out one of the integers, getting increased by one each time (i+1)
-        }                                                        //^^This is what takes out every other number necessary for the lugn algorithm
-        for (int i = num.length - 2; i >= 0; i = i - 2) {  
-            int l = num[i];
-            l = l * (2); //Multiplies the number by two
-            if ( l > 9) {     //If statement for if the number is greater than 9 
-                l = l % (10) + 1; // If above if statement is entered, it adds the two numbers within the 2 digit number together
-            }
-            num [i] = l;
-        } 
-        int sum = (0);
-        for (int i = 0; i < num.length; i++) {
-            sum = sum + num[i];
-        }
-        if (sum % 10 == 0) { //Does modulus 10 of the two added parts (sum). If result is 0, credit card is valid/boolean returns true
-            return true; //returns true (credit card is valid)
-        } 
-        else { // Modulus 10 of sum did not return 0, invalid credit card/boolean returns false
-            return false; //returns false (credit card is not valid)
-        }
+    public static boolean validateCreditCard(String creditC)
+{
+    creditC = creditC.replaceAll("\\s+",""); //Removes any spaces that the user may have inputted, for some reason i couldnt manage to make it remove the spaces int he card number AND work with the rest of the code
+    System.out.println(creditC);  //Useless output just showing that the program DOES remove spaces from a credit card number
+    
+    // If inputted credit card is less than 9 digits outputs this and ets the user re-input the credit card number
+    if(creditC.length() < 9)
+    {
+        System.out.println("Credit card must be at least 9 digits");
+        return false;
     }
+
+    
+    String numberReversed = "";
+    for(int i = creditC.length()-1; i >= 0; i--){ //Reverses the order of the numbers 
+        numberReversed += creditC.charAt(i);
+    }
+    
+    // gets sum 1
+    int sum1 = 0;
+    for(int i = 0; i < numberReversed.length(); i += 2){ //Collects every odd number and adds them to get sum 1
+        sum1 += Integer.parseInt(String.valueOf(numberReversed.charAt(i)));
+    }
+
+    // gets sum2
+    int sum2 = 0;
+    for(int i = 1; i < numberReversed.length(); i += 2){
+        int temp = Integer.parseInt(String.valueOf(numberReversed.charAt(i)))*2; //Every even number is taken here and multiplied by 2
+        if(temp > 9) //If the multiplied by 2 number is bigger than 9, the two numbers within that is added together
+        {
+            temp = temp/10 + temp%10;
+        }
+        sum2 += temp;
+    }
+    int sumt = sum1+sum2;
+
+    // modulus of 10 determine if ends with 0
+    if(sumt%10 == 0){
+        return true; //Ended in zero meaning the credit card was valid
+    }
+    else{ //Did not end is zero meaning the credit card was false
+        return false;
+    }
+}
     
     /*
     * This method may be edited to achieve the task however you like.
