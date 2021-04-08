@@ -93,7 +93,7 @@ class CustomerSystem{
             postalCheck = validatePostalCode(pc); //Summons a further method responsible for checking the postal code to do so    
             
             if (postalCheck == false){ //Output if the postal code is incorrect
-                System.out.println ("Invalid postal code, please retry with proper formatting (ex. OOO_OOO)");
+                System.out.println ("Invalid postal code, please retry with proper formatting or input a valid postal code (ex. OOO_OOO)");
             }
         }
         
